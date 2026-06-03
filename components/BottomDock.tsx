@@ -16,12 +16,13 @@ export function BottomDock({ chatOpen = false, onToggleChat }: BottomDockProps) 
   useEffect(() => setMounted(true), []);
 
   return (
-    <motion.nav
+    <motion.div
       initial={{ opacity: 0, y: 16 }}
       animate={{ opacity: 1, y: 0 }}
       transition={{ duration: 0.4, delay: 0.7 }}
-      className="fixed bottom-6 left-1/2 -translate-x-1/2 z-50 flex items-center gap-0.5 px-3 py-2 rounded-full border border-neutral-200/80 dark:border-neutral-700/80 bg-white/80 dark:bg-neutral-900/80 backdrop-blur-md shadow-sm"
+      className="fixed bottom-6 inset-x-0 z-50 flex justify-center pointer-events-none"
     >
+    <nav className="pointer-events-auto flex items-center gap-0.5 px-3 py-2 rounded-full border border-neutral-200/80 dark:border-neutral-700/80 bg-white/80 dark:bg-neutral-900/80 backdrop-blur-md shadow-sm">
       <a
         href="https://www.linkedin.com/in/mengyao-li-software/"
         target="_blank"
@@ -71,6 +72,7 @@ export function BottomDock({ chatOpen = false, onToggleChat }: BottomDockProps) 
           <div className="h-4 w-4" />
         )}
       </button>
-    </motion.nav>
+    </nav>
+    </motion.div>
   );
 }

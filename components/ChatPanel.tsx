@@ -140,8 +140,8 @@ export function ChatPanel({ onBack }: ChatPanelProps) {
                 />
               ))}
 
-              {/* Streaming / loading indicator */}
-              {isLoading && (
+              {/* Loading indicator — only before AI starts streaming */}
+              {isLoading && messages[messages.length - 1]?.role !== 'assistant' && (
                 <motion.div
                   initial={{ opacity: 0 }}
                   animate={{ opacity: 1 }}

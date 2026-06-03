@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import Image from "next/image";
-import { ArrowRight, FileText, ExternalLink, Mail, Linkedin } from "lucide-react";
+import { ArrowRight, ExternalLink, Download } from "lucide-react";
 
 const TAG_CHIPS = [
   "AI Product Engineering",
@@ -13,44 +13,73 @@ const TAG_CHIPS = [
 
 const PROJECTS = [
   {
-    subtitle: "AI Storytelling SaaS · Built 0 to 1",
+    tag: "Solo · SaaS",
     name: "SnapStory AI",
-    description:
-      "Solo-built AI storytelling SaaS with async generation, Stripe monetization, and creator workflows.",
+    metric: "2,000+ early users · 3 months",
+    description: "Solo-built AI storytelling SaaS. Users enter a keyword or image and get multi-panel comics across 12+ art styles. Full stack: Next.js, OpenAI, Replicate, Stripe credits, async generation queues, community prompt library, EN/ZH i18n.",
     href: "https://www.snapstoryai.com",
-    bg: "bg-violet-50 dark:bg-violet-950/40 hover:bg-violet-100/80 dark:hover:bg-violet-950/60",
-    border: "border-violet-200/80 dark:border-violet-800/50",
-    label: "text-violet-500 dark:text-violet-400",
+    live: true,
   },
   {
-    subtitle: "AI Creative Tools · Ops Systems",
-    name: "Atria AI",
-    description:
-      "Built AI creative generation, moderation workflows, creator tooling, SEO growth, and internal ops systems.",
-    href: "https://www.linkedin.com/in/mengyao-li-software/",
-    bg: "bg-sky-50 dark:bg-sky-950/40 hover:bg-sky-100/80 dark:hover:bg-sky-950/60",
-    border: "border-sky-200/80 dark:border-sky-800/50",
-    label: "text-sky-500 dark:text-sky-400",
+    tag: "Solo · AI Tool",
+    name: "PageGenAI",
+    metric: "10× faster · hours → minutes",
+    description: "Text / screenshot / template-to-page AI pipeline. Paste a description or screenshot and get a fully built web page. Solo full-stack build: Next.js, OpenAI, layout reasoning pipeline.",
+    href: "https://github.com/MiaMia-Li/",
+    live: false,
   },
   {
-    subtitle: "Enterprise Systems · Frontend Lead",
-    name: "Kuaishou",
-    description:
-      "Led frontend delivery for enterprise workflow platforms and operational tooling at large scale.",
+    tag: "Atria · Internal Tool",
+    name: "Admin Dashboard",
+    metric: "0→1 in one week · 120+ APIs",
+    description: "Config-driven internal ops platform built from scratch. Covers ad template library management with multi-filter state, batch approve/delete/retry, auto-tags drawer, industry stats dashboard, and degraded-asset visualization.",
     href: "https://www.linkedin.com/in/mengyao-li-software/",
-    bg: "bg-orange-50 dark:bg-orange-950/40 hover:bg-orange-100/80 dark:hover:bg-orange-950/60",
-    border: "border-orange-200/80 dark:border-orange-800/50",
-    label: "text-orange-500 dark:text-orange-400",
+    live: false,
   },
   {
-    subtitle: "Merchant Growth · ¥6.6M Impact",
-    name: "Meituan",
-    description:
-      "Built merchant self-service workflows, platform redesigns, and performance improvements for scale.",
+    tag: "Atria · Chrome Extension",
+    name: "Ad Saver Extension",
+    metric: "5 platforms · ~60% code reuse",
+    description: "Cross-platform Chrome extension injecting save buttons into TikTok Organic, TikTok Ads, TikTok Library, Instagram, and Meta Ad Library. Solved DOM injection, z-index conflicts, route-aware mounting, and P0 production bugs.",
     href: "https://www.linkedin.com/in/mengyao-li-software/",
-    bg: "bg-yellow-50 dark:bg-yellow-950/40 hover:bg-yellow-100/80 dark:hover:bg-yellow-950/60",
-    border: "border-yellow-200/80 dark:border-yellow-800/50",
-    label: "text-yellow-600 dark:text-yellow-400",
+    live: false,
+  },
+  {
+    tag: "Kuaishou · No-code Platform",
+    name: "Koda Flow",
+    metric: "50% pipeline efficiency gain",
+    description: "Enterprise no-code workflow platform. Drag-and-drop canvas via X6, Redux global state, dynamic form rendering from connector config, modular MVC architecture. Led 6-person team.",
+    href: "https://www.linkedin.com/in/mengyao-li-software/",
+    live: false,
+  },
+  {
+    tag: "Kuaishou · H5 Game",
+    name: "12th Anniversary Game",
+    metric: "26,000+ visits · 85% participation",
+    description: "Company-wide H5 mini game with psychological test, shareable results page, and lottery system. Delivered in under one month. Solved mobile animation compatibility across Android/iOS — highest engagement in company history.",
+    href: "https://www.linkedin.com/in/mengyao-li-software/",
+    live: false,
+  },
+];
+
+const EXPERIENCE = [
+  {
+    company: "Atria AI",
+    role: "Frontend Engineer",
+    period: "Mar 2025 – May 2026",
+    metric: "651 commits · AI image generation core",
+  },
+  {
+    company: "Kuaishou",
+    role: "Frontend Developer",
+    period: "Sep 2020 – May 2024",
+    metric: "Led 4-person team · 50% efficiency gain",
+  },
+  {
+    company: "Meituan",
+    role: "Frontend Developer",
+    period: "Apr 2019 – Sep 2020",
+    metric: "¥6.6M revenue · 300,000+ merchants",
   },
 ];
 
@@ -119,90 +148,111 @@ export function HeroSection({ onStartChat }: HeroSectionProps) {
           </div>
         </motion.div>
 
-        {/* ── Projects ── */}
+        {/* ── Chat (primary CTA) ── */}
         <motion.div {...fadeUp(0.2)} className="mb-10">
+          <span className="font-mono text-[11px] text-blue-600 dark:text-blue-400 block mb-2">
+            /chat
+          </span>
+          <button
+            onClick={onStartChat}
+            className="group w-full flex items-center justify-between px-5 py-4 border border-neutral-900 dark:border-neutral-100 rounded-xl bg-neutral-900 dark:bg-neutral-100 hover:bg-neutral-800 dark:hover:bg-neutral-200 active:scale-[0.99] transition-all duration-200"
+          >
+            <div className="text-left">
+              <span className="block text-sm font-semibold text-white dark:text-neutral-900">
+                Ask Mia AI
+              </span>
+              <span className="block text-xs text-neutral-400 dark:text-neutral-600 mt-0.5">
+                Projects, experience, role fit, availability — just ask
+              </span>
+            </div>
+            <ArrowRight className="h-4 w-4 text-neutral-400 dark:text-neutral-600 group-hover:translate-x-0.5 transition-all duration-200 flex-shrink-0" />
+          </button>
+        </motion.div>
+
+        {/* ── Projects ── */}
+        <motion.div {...fadeUp(0.26)} className="mb-10">
           <span className="font-mono text-[11px] text-blue-600 dark:text-blue-400 block mb-3">
             /projects
           </span>
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
+          <div className="grid grid-cols-2 gap-2">
             {PROJECTS.map((project) => (
               <a
                 key={project.name}
                 href={project.href}
                 target="_blank"
                 rel="noopener noreferrer"
-                className={`group flex min-h-[148px] flex-col justify-between p-4 rounded-xl border transition-all duration-200 ${project.bg} ${project.border}`}
+                className="group flex items-center gap-2 px-3 py-2 rounded-lg border border-neutral-200 dark:border-neutral-700 bg-white/60 dark:bg-neutral-900/60 hover:border-neutral-300 dark:hover:border-neutral-600 hover:bg-neutral-50 dark:hover:bg-neutral-800/60 transition-all"
               >
-                <div>
-                  <div className="flex items-start justify-between mb-4">
-                    <span
-                      className={`text-[10px] font-mono leading-snug ${project.label}`}
-                    >
-                      {project.subtitle}
+                <div className="flex-1 min-w-0">
+                  <div className="flex items-center gap-1.5">
+                    <span className="text-xs font-semibold text-neutral-900 dark:text-neutral-100">
+                      {project.name}
                     </span>
-                    <ExternalLink className="h-3.5 w-3.5 text-neutral-400 group-hover:text-neutral-600 dark:group-hover:text-neutral-300 flex-shrink-0 ml-2 mt-0.5 transition-colors" />
+                    {project.live && (
+                      <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 flex-shrink-0" />
+                    )}
                   </div>
-                  <span className="block text-sm font-semibold text-neutral-800 dark:text-neutral-100 mb-2">
-                    {project.name}
-                  </span>
-                  <p className="text-xs leading-relaxed text-neutral-600 dark:text-neutral-400">
+                  <p className="text-[10px] text-neutral-500 dark:text-neutral-400 mt-0.5 leading-snug">
+                    {project.metric}
+                  </p>
+                  <p className="text-[11px] text-neutral-600 dark:text-neutral-300 mt-1 leading-relaxed line-clamp-2">
                     {project.description}
                   </p>
                 </div>
+                <ExternalLink className="h-3 w-3 text-neutral-300 dark:text-neutral-600 group-hover:text-neutral-500 dark:group-hover:text-neutral-400 flex-shrink-0 ml-2 transition-colors" />
               </a>
             ))}
           </div>
         </motion.div>
 
-        {/* ── Chat ── */}
-        <motion.div {...fadeUp(0.28)} className="mb-8">
-          <span className="font-mono text-[11px] text-blue-600 dark:text-blue-400 block mb-2">
-            /chat
+        {/* ── Experience ── */}
+        <motion.div {...fadeUp(0.32)} className="mb-10">
+          <span className="font-mono text-[11px] text-blue-600 dark:text-blue-400 block mb-3">
+            /experience
           </span>
-          <button
-            onClick={onStartChat}
-            className="group w-full flex items-center justify-between px-4 py-3.5 border border-neutral-200 dark:border-neutral-700 rounded-xl bg-neutral-50/60 dark:bg-neutral-900/60 hover:border-blue-400 dark:hover:border-blue-500 hover:bg-blue-50/40 dark:hover:bg-blue-950/20 active:scale-[0.99] transition-all duration-200"
-          >
-            <span className="text-sm font-medium text-neutral-700 dark:text-neutral-300">
-              Ask Mia AI about projects, impact, and fit
-            </span>
-            <ArrowRight className="h-4 w-4 text-neutral-400 group-hover:text-blue-500 group-hover:translate-x-0.5 transition-all duration-200" />
-          </button>
+          <div className="flex flex-col divide-y divide-neutral-100 dark:divide-neutral-800 border border-neutral-200 dark:border-neutral-800 rounded-xl overflow-hidden">
+            {EXPERIENCE.map((exp) => (
+              <div
+                key={exp.company}
+                className="flex items-center justify-between px-4 py-3.5 bg-white/60 dark:bg-neutral-900/60"
+              >
+                <div className="min-w-0">
+                  <div className="flex items-center gap-2">
+                    <span className="text-sm font-semibold text-neutral-800 dark:text-neutral-100">
+                      {exp.company}
+                    </span>
+                    <span className="text-xs text-neutral-500 dark:text-neutral-400 hidden sm:inline">
+                      · {exp.role}
+                    </span>
+                  </div>
+                  <p className="text-[11px] text-neutral-600 dark:text-neutral-400 mt-0.5">
+                    {exp.metric}
+                  </p>
+                </div>
+                <span className="text-[11px] text-neutral-500 dark:text-neutral-400 hidden sm:inline flex-shrink-0 ml-3">
+                  {exp.period}
+                </span>
+              </div>
+            ))}
+          </div>
         </motion.div>
 
         {/* ── Links ── */}
-        <motion.div {...fadeUp(0.34)} className="mb-8">
+        <motion.div {...fadeUp(0.38)} className="mb-8">
           <span className="font-mono text-[11px] text-blue-600 dark:text-blue-400 block mb-2">
             /links
           </span>
-          <div className="flex gap-2">
-            <a
-              href="/resume.pdf"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-1.5 px-4 py-2 text-xs border border-neutral-200 dark:border-neutral-700 rounded-lg text-neutral-600 dark:text-neutral-400 hover:border-neutral-300 dark:hover:border-neutral-600 hover:text-neutral-900 dark:hover:text-neutral-200 transition-colors"
-            >
-              <FileText className="h-3.5 w-3.5" />
-              Resume
-            </a>
-            <a
-              href="mailto:sept.miamia@gmail.com"
-              className="flex items-center gap-1.5 px-4 py-2 text-xs border border-neutral-200 dark:border-neutral-700 rounded-lg text-neutral-600 dark:text-neutral-400 hover:border-neutral-300 dark:hover:border-neutral-600 hover:text-neutral-900 dark:hover:text-neutral-200 transition-colors"
-            >
-              <Mail className="h-3.5 w-3.5" />
-              Email
-            </a>
-            <a
-              href="https://www.linkedin.com/in/mengyao-li-software/"
-              target="_blank"
-              rel="noopener noreferrer"
-              className="flex items-center gap-1.5 px-4 py-2 text-xs border border-neutral-200 dark:border-neutral-700 rounded-lg text-neutral-600 dark:text-neutral-400 hover:border-neutral-300 dark:hover:border-neutral-600 hover:text-neutral-900 dark:hover:text-neutral-200 transition-colors"
-            >
-              <Linkedin className="h-3.5 w-3.5" />
-              LinkedIn
-            </a>
-          </div>
+          <a
+            href="/resume.pdf"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-flex items-center gap-1.5 px-4 py-2 text-xs border border-neutral-200 dark:border-neutral-700 rounded-lg text-neutral-700 dark:text-neutral-300 hover:border-neutral-300 dark:hover:border-neutral-600 hover:text-neutral-900 dark:hover:text-neutral-100 transition-colors"
+          >
+            <Download className="h-3.5 w-3.5" />
+            Resume
+          </a>
         </motion.div>
+
       </div>
     </section>
   );
