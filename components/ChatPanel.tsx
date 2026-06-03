@@ -3,17 +3,17 @@
 import { useEffect, useRef } from 'react';
 import { useChat } from 'ai/react';
 import { motion } from 'framer-motion';
-import { ArrowLeft, Send } from 'lucide-react';
+import { ArrowLeft, RotateCcw, Send } from 'lucide-react';
 import Image from 'next/image';
 import { ChatMessage } from './ChatMessage';
 import { PromptSuggestions } from './PromptSuggestions';
 
 const SUGGESTED_PROMPTS = [
-  'Tell me about your AI product work',
   'What did you build with SnapStory AI?',
-  'How have you used LLMs and image generation?',
-  'What impact did you have at Meituan and Kuaishou?',
-  'Are you open to EP sponsorship or remote roles?',
+  'Tell me about your work at Atria AI',
+  'What are your AI and full-stack engineering skills?',
+  'Are you open to remote or EP sponsorship roles?',
+  'How can I contact you?',
 ];
 
 interface ChatPanelProps {
@@ -21,7 +21,7 @@ interface ChatPanelProps {
 }
 
 export function ChatPanel({ onBack }: ChatPanelProps) {
-  const { messages, input, handleInputChange, handleSubmit, isLoading, append } = useChat({
+  const { messages, input, handleInputChange, handleSubmit, isLoading, append, setMessages } = useChat({
     api: '/api/chat',
   });
 
@@ -81,9 +81,21 @@ export function ChatPanel({ onBack }: ChatPanelProps) {
             </p>
           </div>
         </div>
-        <div className="ml-auto flex items-center gap-1.5">
-          <div className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
-          <span className="text-xs text-neutral-400">Online</span>
+        <div className="ml-auto flex items-center gap-3">
+          {hasMessages && (
+            <button
+              onClick={() => setMessages([])}
+              className="p-1.5 rounded-md text-neutral-400 hover:text-neutral-900 dark:hover:text-neutral-100 hover:bg-neutral-100 dark:hover:bg-neutral-800 transition-colors"
+              aria-label="Clear chat"
+              title="Clear chat"
+            >
+              <RotateCcw className="h-3.5 w-3.5" />
+            </button>
+          )}
+          <div className="flex items-center gap-1.5">
+            <div className="h-1.5 w-1.5 rounded-full bg-emerald-400" />
+            <span className="text-xs text-neutral-400">Online</span>
+          </div>
         </div>
       </div>
 
