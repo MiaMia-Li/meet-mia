@@ -9,8 +9,8 @@ import { ChatMessage } from './ChatMessage';
 import { PromptSuggestions } from './PromptSuggestions';
 
 const SUGGESTED_PROMPTS = [
-  'What did you build with SnapStory AI?',
-  'Tell me about your work at Atria AI',
+  'What projects have you built?',
+  'Walk me through your career',
   'What are your AI and full-stack engineering skills?',
   'Are you open to remote or EP sponsorship roles?',
   'How can I contact you?',
@@ -136,6 +136,7 @@ export function ChatPanel({ onBack }: ChatPanelProps) {
                     role: message.role as 'user' | 'assistant',
                     content: message.content,
                   }}
+                  onSelect={handlePromptSelect}
                 />
               ))}
 

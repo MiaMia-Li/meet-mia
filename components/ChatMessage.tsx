@@ -14,16 +14,21 @@ interface Message {
 
 interface ChatMessageProps {
   message: Message;
+  onSelect?: (prompt: string) => void;
 }
 
 const CARD_PATTERN = /<mia_card>([\s\S]*?)<\/mia_card>/g;
 const PARTIAL_CARD_PATTERN = /<mia_card>(?:(?!<\/mia_card>)[\s\S])*$/;
+const FOLLOWUPS_PATTERN = /<mia_followups>([\s\S]*?)<\/mia_followups>/;
+const PARTIAL_FOLLOWUPS_PATTERN = /<mia_followups>(?:(?!<\/mia_followups>)[\s\S])*$/;
 
 function parseAssistantContent(content: string): {
   text: string;
   cards: CardData[];
+  followups: string[];
 } {
   const cards: CardData[] = [];
+  let followups: string[] = [];
 
   const text = content
     .replace(CARD_PATTERN, (_match, json: string) => {
@@ -38,15 +43,25 @@ function parseAssistantContent(content: string): {
       return '';
     })
     .replace(PARTIAL_CARD_PATTERN, '')
+    .replace(FOLLOWUPS_PATTERN, (_match, json: string) => {
+      try {
+        const parsed = JSON.parse(json.trim());
+        if (Array.isArray(parsed)) followups = parsed;
+      } catch {
+        // malformed JSON during streaming, skip
+      }
+      return '';
+    })
+    .replace(PARTIAL_FOLLOWUPS_PATTERN, '')
     .trim();
 
-  return { text, cards };
+  return { text, cards, followups };
 }
 
-export function ChatMessage({ message }: ChatMessageProps) {
+export function ChatMessage({ message, onSelect }: ChatMessageProps) {
   const isUser = message.role === 'user';
   const parsed = isUser
-    ? { text: message.content, cards: [] }
+    ? { text: message.content, cards: [], followups: [] }
     : parseAssistantContent(message.content);
 
   return (
@@ -109,8 +124,22 @@ export function ChatMessage({ message }: ChatMessageProps) {
 
         {!isUser &&
           parsed.cards.map((card, i) => (
-            <ProfileCard key={`${card.title}-${i}`} card={card} />
+            <ProfileCard key={`${card.title}-${i}`} card={card} onSelect={onSelect} />
           ))}
+
+        {!isUser && onSelect && parsed.followups.length > 0 && (
+          <div className="flex flex-wrap gap-1.5">
+            {parsed.followups.map((prompt) => (
+              <button
+                key={prompt}
+                onClick={() => onSelect(prompt)}
+                className="rounded-lg border border-neutral-200 dark:border-neutral-700 px-2.5 py-1 text-[11px] text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-800 hover:text-neutral-900 dark:hover:text-neutral-100 active:scale-[0.98] transition-all text-left"
+              >
+                {prompt}
+              </button>
+            ))}
+          </div>
+        )}
       </div>
     </motion.div>
   );

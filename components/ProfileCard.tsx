@@ -11,13 +11,15 @@ export interface CardData {
     label: string;
     href: string;
   };
+  followups?: string[];
 }
 
 interface ProfileCardProps {
   card: CardData;
+  onSelect?: (prompt: string) => void;
 }
 
-export function ProfileCard({ card }: ProfileCardProps) {
+export function ProfileCard({ card, onSelect }: ProfileCardProps) {
   return (
     <div className="w-full rounded-2xl rounded-bl-[4px] border border-neutral-100 bg-neutral-50 dark:border-neutral-800 dark:bg-neutral-900 px-4 py-3">
       <div className="flex items-start justify-between gap-3 mb-2">
@@ -62,6 +64,20 @@ export function ProfileCard({ card }: ProfileCardProps) {
             >
               {tag}
             </span>
+          ))}
+        </div>
+      )}
+
+      {onSelect && card.followups && card.followups.length > 0 && (
+        <div className="mt-3 flex flex-wrap gap-1.5 border-t border-neutral-100 dark:border-neutral-800 pt-3">
+          {card.followups.map((prompt) => (
+            <button
+              key={prompt}
+              onClick={() => onSelect(prompt)}
+              className="rounded-lg border border-neutral-200 dark:border-neutral-700 px-2.5 py-1 text-[11px] text-neutral-600 dark:text-neutral-400 hover:bg-neutral-100 dark:hover:bg-neutral-800 hover:text-neutral-900 dark:hover:text-neutral-100 active:scale-[0.98] transition-all text-left"
+            >
+              {prompt}
+            </button>
           ))}
         </div>
       )}
