@@ -1,0 +1,23 @@
+{
+  "name": "Meet Mia — Senior Full-Stack AI Engineer",
+  "short_name": "Mia AI",
+  "description": "Chat with Mia AI — a digital twin of Mengyao Li, senior full-stack AI engineer based in Singapore.",
+  "icons": [
+    {
+      "src": "/icon1.png",
+      "sizes": "192x192",
+      "type": "image/png",
+      "purpose": "maskable"
+    },
+    {
+      "src": "/apple-icon.png",
+      "sizes": "512x512",
+      "type": "image/png",
+      "purpose": "maskable"
+    }
+  ],
+  "theme_color": "#ffffff",
+  "background_color": "#ffffff",
+  "display": "standalone",
+  "start_url": "/"
+}
