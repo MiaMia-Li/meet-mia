@@ -9,11 +9,12 @@ import { ChatMessage } from './ChatMessage';
 import { PromptSuggestions } from './PromptSuggestions';
 
 const SUGGESTED_PROMPTS = [
-  'What projects have you built?',
-  'Walk me through your career',
-  'What are your AI and full-stack engineering skills?',
-  'Are you open to remote or EP sponsorship roles?',
-  'How can I contact you?',
+  "What's the most interesting thing you've built?",
+  "Why did you leave Kuaishou for a startup?",
+  "What does your AI stack actually look like?",
+  "Would you be a good fit for my team?",
+  "What kind of problems get you excited?",
+  "Are you open to new roles right now?",
 ];
 
 interface ChatPanelProps {

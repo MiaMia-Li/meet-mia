@@ -11,14 +11,34 @@ const playfair = Playfair_Display({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL('https://himia.me'),
   title: 'Meet Mia — Senior Full-Stack AI Engineer',
   description:
-    'Mengyao Li is a product-minded senior software engineer in Singapore, focused on AI workflows, generative AI, creative tools, and full-stack SaaS systems.',
+    'Chat with Mia AI — the digital twin of Mengyao Li, a senior full-stack engineer in Singapore building AI workflows, generative AI products, and SaaS systems.',
+  keywords: ['AI engineer', 'full-stack engineer', 'Singapore', 'Next.js', 'OpenAI', 'generative AI', 'SaaS', 'EP sponsorship'],
+  authors: [{ name: 'Mengyao Li', url: 'https://himia.me' }],
   openGraph: {
     title: 'Meet Mia — Senior Full-Stack AI Engineer',
     description:
-      'AI product engineering, generative AI workflows, creative tools, and full-stack SaaS systems. Open to EP sponsorship and senior remote roles.',
+      'Chat with my AI twin. Ask about my projects, tech stack, or open roles. AI product engineering · Singapore · Open to senior remote.',
+    url: 'https://himia.me',
+    siteName: 'Meet Mia',
     type: 'website',
+    locale: 'en_US',
+    images: [{ url: '/og-image.png', width: 1536, height: 1024, alt: 'Meet Mia — Senior Full-Stack AI Engineer' }],
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Meet Mia — Senior Full-Stack AI Engineer',
+    description: 'Chat with my AI twin. Ask about my projects, tech stack, or open roles.',
+    images: ['/og-image.png'],
+  },
+  robots: {
+    index: true,
+    follow: true,
+  },
+  alternates: {
+    canonical: 'https://himia.me',
   },
 };
 

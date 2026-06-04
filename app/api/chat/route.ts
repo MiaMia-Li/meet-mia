@@ -4,22 +4,19 @@ import { Ratelimit } from '@upstash/ratelimit';
 import { Redis } from '@upstash/redis';
 import { miaKnowledge } from '@/lib/knowledge';
 
-// Token bucket: capacity 5, refills 10/hour (~1 token per 6 min)
-// Visitors can send 5 messages in a burst before hitting the limit
-const redis = new Redis({
-  url: process.env.KV_REST_API_URL!,
-  token: process.env.KV_REST_API_TOKEN!,
-});
-
-const ratelimit = new Ratelimit({
-  redis,
-  limiter: Ratelimit.tokenBucket(10, '1 h', 5),
-  analytics: true,
-  prefix: 'mia-chat',
-});
-
 export async function POST(req: Request) {
   if (process.env.RATE_LIMIT_ENABLED === 'true') {
+    const redis = new Redis({
+      url: process.env.KV_REST_API_URL!,
+      token: process.env.KV_REST_API_TOKEN!,
+    });
+    const ratelimit = new Ratelimit({
+      redis,
+      limiter: Ratelimit.tokenBucket(10, '1 h', 5),
+      analytics: true,
+      prefix: 'mia-chat',
+    });
+
     const ip =
       req.headers.get('x-forwarded-for')?.split(',')[0].trim() ?? 'anonymous';
 
@@ -49,7 +46,7 @@ export async function POST(req: Request) {
     model: openai('gpt-4o-mini'),
     system: miaKnowledge,
     messages,
-    maxTokens: 600,
+    maxTokens: 1500,
     temperature: 0.7,
   });
 
