@@ -19,26 +19,28 @@ const ratelimit = new Ratelimit({
 });
 
 export async function POST(req: Request) {
-  const ip =
-    req.headers.get('x-forwarded-for')?.split(',')[0].trim() ?? 'anonymous';
+  if (process.env.RATE_LIMIT_ENABLED === 'true') {
+    const ip =
+      req.headers.get('x-forwarded-for')?.split(',')[0].trim() ?? 'anonymous';
 
-  const { success, limit, remaining, reset } = await ratelimit.limit(ip);
+    const { success, limit, remaining, reset } = await ratelimit.limit(ip);
 
-  if (!success) {
-    return new Response(
-      JSON.stringify({
-        error: 'Too many requests — please try again in a few minutes.',
-      }),
-      {
-        status: 429,
-        headers: {
-          'Content-Type': 'application/json',
-          'X-RateLimit-Limit': String(limit),
-          'X-RateLimit-Remaining': String(remaining),
-          'X-RateLimit-Reset': String(reset),
-        },
-      }
-    );
+    if (!success) {
+      return new Response(
+        JSON.stringify({
+          error: 'Too many requests — please try again in a few minutes.',
+        }),
+        {
+          status: 429,
+          headers: {
+            'Content-Type': 'application/json',
+            'X-RateLimit-Limit': String(limit),
+            'X-RateLimit-Remaining': String(remaining),
+            'X-RateLimit-Reset': String(reset),
+          },
+        }
+      );
+    }
   }
 
   const { messages } = await req.json();
