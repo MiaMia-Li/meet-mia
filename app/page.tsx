@@ -3,6 +3,7 @@
 import { useState } from 'react';
 import { HeroSection } from '@/components/HeroSection';
 import { ChatPanel } from '@/components/ChatPanel';
+import { ChatErrorBoundary } from '@/components/ChatErrorBoundary';
 import { BottomDock } from '@/components/BottomDock';
 
 export default function Home() {
@@ -26,7 +27,9 @@ export default function Home() {
           chatOpen ? 'translate-x-0' : 'translate-x-full'
         }`}
       >
-        <ChatPanel onBack={() => setChatOpen(false)} />
+        <ChatErrorBoundary>
+          <ChatPanel onBack={() => setChatOpen(false)} />
+        </ChatErrorBoundary>
       </div>
 
       <BottomDock chatOpen={chatOpen} onToggleChat={() => setChatOpen(v => !v)} />

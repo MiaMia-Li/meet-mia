@@ -1,6 +1,6 @@
 'use client';
 
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useChat } from 'ai/react';
 import { motion } from 'framer-motion';
 import { ArrowLeft, RotateCcw, Send } from 'lucide-react';
@@ -21,8 +21,18 @@ interface ChatPanelProps {
 }
 
 export function ChatPanel({ onBack }: ChatPanelProps) {
+  const [rateLimitError, setRateLimitError] = useState<string | null>(null);
+
   const { messages, input, handleInputChange, handleSubmit, isLoading, append, setMessages } = useChat({
     api: '/api/chat',
+    onError: (error) => {
+      if (error.message.includes('429') || error.message.toLowerCase().includes('too many')) {
+        setRateLimitError('Too many messages — please wait a few minutes and try again.');
+      } else {
+        setRateLimitError('Something went wrong. Please try again.');
+      }
+    },
+    onResponse: () => setRateLimitError(null),
   });
 
   const messagesEndRef = useRef<HTMLDivElement>(null);
@@ -168,6 +178,13 @@ export function ChatPanel({ onBack }: ChatPanelProps) {
           )}
         </div>
       </div>
+
+      {/* Rate limit error banner */}
+      {rateLimitError && (
+        <div className="mx-4 mb-2 rounded-lg border border-orange-200 bg-orange-50 px-3 py-2 text-xs text-orange-700 dark:border-orange-900/50 dark:bg-orange-950/30 dark:text-orange-400">
+          {rateLimitError}
+        </div>
+      )}
 
       {/* Input area */}
       <div className="border-t border-neutral-100 dark:border-neutral-800 px-4 py-4 flex-shrink-0">
