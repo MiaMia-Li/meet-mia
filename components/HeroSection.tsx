@@ -188,7 +188,7 @@ export function HeroSection({ onOpenChat }: HeroSectionProps) {
                     key={label}
                     href={href}
                     target={label !== "Email" ? "_blank" : undefined}
-                    rel="noopener noreferrer"
+                    rel={label !== "Email" ? "noopener noreferrer" : undefined}
                     aria-label={label}
                     className="p-2 rounded-full border border-neutral-200 dark:border-neutral-700 text-gray-500 dark:text-neutral-400 hover:text-black dark:hover:text-white hover:border-black dark:hover:border-white transition-all"
                   >
