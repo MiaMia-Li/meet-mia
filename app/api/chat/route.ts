@@ -6,8 +6,13 @@ import { miaKnowledge } from '@/lib/knowledge';
 
 // Token bucket: capacity 5, refills 10/hour (~1 token per 6 min)
 // Visitors can send 5 messages in a burst before hitting the limit
+const redis = new Redis({
+  url: process.env.KV_REST_API_URL!,
+  token: process.env.KV_REST_API_TOKEN!,
+});
+
 const ratelimit = new Ratelimit({
-  redis: Redis.fromEnv(),
+  redis,
   limiter: Ratelimit.tokenBucket(10, '1 h', 5),
   analytics: true,
   prefix: 'mia-chat',
