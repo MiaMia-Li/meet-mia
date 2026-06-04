@@ -1,259 +1,376 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { useEffect, useState } from "react";
 import Image from "next/image";
-import { ArrowRight, ExternalLink, Download } from "lucide-react";
+import { motion, AnimatePresence } from "framer-motion";
+import {
+  ArrowUpRight,
+  MessageCircle,
+  Linkedin,
+  Github,
+  Mail,
+  Sparkles,
+} from "lucide-react";
 
-const TAG_CHIPS = [
-  "AI Product Engineering",
-  "Full-Stack SaaS",
-  "Singapore / Remote",
-];
-
-
-const PROJECTS = [
-  {
-    tag: "Solo · SaaS",
-    name: "SnapStory AI",
-    metric: "2,000+ early users · 3 months",
-    description: "Solo-built AI storytelling SaaS. Users enter a keyword or image and get multi-panel comics across 12+ art styles. Full stack: Next.js, OpenAI, Replicate, Stripe credits, async generation queues, community prompt library, EN/ZH i18n.",
-    href: "https://www.snapstoryai.com",
-    live: true,
-  },
-  {
-    tag: "Solo · AI Tool",
-    name: "PageGenAI",
-    metric: "10× faster · hours → minutes",
-    description: "Text / screenshot / template-to-page AI pipeline. Paste a description or screenshot and get a fully built web page. Solo full-stack build: Next.js, OpenAI, layout reasoning pipeline.",
-    href: "https://github.com/MiaMia-Li/",
-    live: false,
-  },
-  {
-    tag: "Atria · Internal Tool",
-    name: "Admin Dashboard",
-    metric: "0→1 in one week · 120+ APIs",
-    description: "Config-driven internal ops platform built from scratch. Covers ad template library management with multi-filter state, batch approve/delete/retry, auto-tags drawer, industry stats dashboard, and degraded-asset visualization.",
-    href: "https://www.linkedin.com/in/mengyao-li-software/",
-    live: false,
-  },
-  {
-    tag: "Atria · Chrome Extension",
-    name: "Ad Saver Extension",
-    metric: "5 platforms · ~60% code reuse",
-    description: "Cross-platform Chrome extension injecting save buttons into TikTok Organic, TikTok Ads, TikTok Library, Instagram, and Meta Ad Library. Solved DOM injection, z-index conflicts, route-aware mounting, and P0 production bugs.",
-    href: "https://www.linkedin.com/in/mengyao-li-software/",
-    live: false,
-  },
-  {
-    tag: "Kuaishou · No-code Platform",
-    name: "Koda Flow",
-    metric: "50% pipeline efficiency gain",
-    description: "Enterprise no-code workflow platform. Drag-and-drop canvas via X6, Redux global state, dynamic form rendering from connector config, modular MVC architecture. Led 6-person team.",
-    href: "https://www.linkedin.com/in/mengyao-li-software/",
-    live: false,
-  },
-  {
-    tag: "Kuaishou · H5 Game",
-    name: "12th Anniversary Game",
-    metric: "26,000+ visits · 85% participation",
-    description: "Company-wide H5 mini game with psychological test, shareable results page, and lottery system. Delivered in under one month. Solved mobile animation compatibility across Android/iOS — highest engagement in company history.",
-    href: "https://www.linkedin.com/in/mengyao-li-software/",
-    live: false,
-  },
-];
+const green = "#22C55E";
 
 const EXPERIENCE = [
   {
     company: "Atria AI",
     role: "Frontend Engineer",
     period: "Mar 2025 – May 2026",
-    metric: "651 commits · AI image generation core",
+    note: "651 commits · AI image generation core",
   },
   {
     company: "Kuaishou",
     role: "Frontend Developer",
     period: "Sep 2020 – May 2024",
-    metric: "Led 4-person team · 50% efficiency gain",
+    note: "Led 4-person team · 50% efficiency gain",
   },
   {
     company: "Meituan",
     role: "Frontend Developer",
     period: "Apr 2019 – Sep 2020",
-    metric: "¥6.6M revenue · 300,000+ merchants",
+    note: "¥6.6M revenue · 300,000+ merchants",
   },
 ];
 
-const fadeUp = (delay: number) => ({
-  initial: { opacity: 0, y: 12 },
-  animate: { opacity: 1, y: 0 },
-  transition: { duration: 0.4, delay, ease: [0.4, 0, 0.2, 1] as const },
-});
+const PROJECTS = [
+  {
+    tag: "Solo · SaaS",
+    name: "SnapStory AI",
+    metric: "2,000+ early users",
+    desc: "AI storytelling SaaS — async generation, Stripe payments, creator workflows.",
+    href: "https://www.snapstoryai.com",
+  },
+  {
+    tag: "AI Tool",
+    name: "PageGenAI",
+    metric: "10x faster creation",
+    desc: "Text / screenshot → full web page pipeline. Solo full-stack.",
+    href: "https://github.com/MiaMia-Li/",
+  },
+  {
+    tag: "Ops Tool",
+    name: "Admin Dashboard",
+    metric: "0→1 in one week",
+    desc: "Internal ops platform · 120+ APIs, template library, data dashboards.",
+    href: "https://www.linkedin.com/in/mengyao-li-software/",
+  },
+  {
+    tag: "Impact",
+    name: "Ad Saver Extension",
+    metric: "5 platforms · 60% reuse",
+    desc: "Cross-platform Chrome extension — TikTok, Instagram, Meta Ad Library.",
+    href: "https://www.linkedin.com/in/mengyao-li-software/",
+  },
+];
+
+const SKILLS = [
+  "TypeScript",
+  "React",
+  "Next.js",
+  "Node.js",
+  "Python",
+  "PostgreSQL",
+  "OpenAI API",
+  "AWS",
+  "Docker",
+  "Stripe",
+];
 
 interface HeroSectionProps {
-  onStartChat: () => void;
+  onOpenChat: () => void;
 }
 
-export function HeroSection({ onStartChat }: HeroSectionProps) {
+export function HeroSection({ onOpenChat }: HeroSectionProps) {
+  const [greeting, setGreeting] = useState("");
+
+  useEffect(() => {
+    const h = new Date().getHours();
+    setGreeting(
+      h < 12 ? "Good morning!" : h < 17 ? "Good afternoon!" : "Good evening!",
+    );
+  }, []);
+
   return (
-    <section className="relative min-h-screen overflow-hidden">
-      <div className="line-grid absolute inset-0 pointer-events-none" />
-
-      <div className="relative z-10 w-full max-w-3xl mx-auto px-6 pt-16 pb-32">
-        {/* ── Header: avatar + identity ── */}
-        <motion.div {...fadeUp(0)} className="flex items-center gap-5 mb-8">
-          <Image
-            src="/avatar.jpg"
-            alt="Mia Li"
-            width={72}
-            height={72}
-            className="w-[72px] h-[72px] rounded-full object-cover ring-2 ring-neutral-200 dark:ring-neutral-700 flex-shrink-0"
-            priority
-          />
-          <div>
-            <h1 className="font-black text-4xl md:text-5xl tracking-tight text-neutral-900 dark:text-neutral-50 leading-none">
-              Mia Li
-            </h1>
-            <p className="text-sm text-neutral-500 dark:text-neutral-400 mt-1.5">
-              Senior Full-Stack AI Engineer · Singapore
-            </p>
-          </div>
-        </motion.div>
-        <div className="border-b border-neutral-100 dark:border-neutral-800 mb-8" />
-
-        {/* ── About ── */}
-        <motion.div {...fadeUp(0.12)} className="mb-10">
-          <span className="font-mono text-[11px] text-blue-600 dark:text-blue-400 block mb-2">
-            /about
-          </span>
-          <p className="text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed max-w-xl mb-3">
-            Product-minded full-stack engineer with 7 years of experience
-            building AI-powered workflows, creative tools, and scalable SaaS
-            systems. I turn LLMs, image generation pipelines, and workflow
-            automation into shipped products, from 0 to production.
-          </p>
-          <p className="text-sm text-neutral-600 dark:text-neutral-400 leading-relaxed max-w-xl mb-4">
-            Open to AI product engineering, full-stack AI systems, generative
-            AI, creative tools, and early-stage product teams. Based in
-            Singapore and open to EP sponsorship or senior remote roles.
-          </p>
-          <div className="flex flex-wrap gap-2">
-            {TAG_CHIPS.map((tag) => (
-              <span
-                key={tag}
-                className="px-2.5 py-0.5 text-xs border border-neutral-200 dark:border-neutral-700 rounded-full text-neutral-500 dark:text-neutral-400"
+    <div className="min-h-screen bg-white dark:bg-neutral-950 pb-28">
+      {/* ── Magazine grid ─────────────────────────────────────── */}
+      <div className="w-full max-w-[1020px] mx-auto border-x border-neutral-200 dark:border-neutral-800">
+        {/* Row 1 — Name */}
+        <motion.div
+          initial={{ opacity: 0, y: 10 }}
+          animate={{ opacity: 1, y: 0 }}
+          transition={{ duration: 0.45 }}
+          className="flex items-end gap-5 px-10 md:px-14 py-10 border-b border-neutral-200 dark:border-neutral-800"
+        >
+          <h1 className="font-black text-[72px] md:text-[104px] leading-none tracking-[-0.04em] text-black dark:text-white">
+            Mia Li.
+          </h1>
+          <AnimatePresence>
+            {greeting && (
+              <motion.span
+                initial={{ opacity: 0, scale: 0.85 }}
+                animate={{ opacity: 1, scale: 1 }}
+                className="mb-3 text-sm font-bold px-3 py-1.5 rounded-full text-white whitespace-nowrap"
+                style={{ background: green }}
               >
-                {tag}
-              </span>
-            ))}
-          </div>
+                {greeting}
+              </motion.span>
+            )}
+          </AnimatePresence>
         </motion.div>
 
-        {/* ── Chat (primary CTA) ── */}
-        <motion.div {...fadeUp(0.2)} className="mb-10">
-          <span className="font-mono text-[11px] text-blue-600 dark:text-blue-400 block mb-2">
-            /chat
-          </span>
-          <button
-            onClick={onStartChat}
-            className="group w-full flex items-center justify-between px-5 py-4 border border-neutral-900 dark:border-neutral-100 rounded-xl bg-neutral-900 dark:bg-neutral-100 hover:bg-neutral-800 dark:hover:bg-neutral-200 active:scale-[0.99] transition-all duration-200"
+        {/* Row 2 — 3-column main */}
+        <div className="grid grid-cols-1 md:grid-cols-[1fr_1.5fr_1fr] divide-y md:divide-y-0 md:divide-x divide-neutral-200 dark:divide-neutral-800 border-b border-neutral-200 dark:border-neutral-800">
+          {/* Col A — About */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.1 }}
+            className="flex flex-col gap-5 p-8"
           >
-            <div className="text-left">
-              <span className="block text-sm font-semibold text-white dark:text-neutral-900">
-                Ask Mia AI
-              </span>
-              <span className="block text-xs text-neutral-400 dark:text-neutral-600 mt-0.5">
-                Projects, experience, role fit, availability — just ask
+            <div>
+              <h2 className="font-bold text-lg text-black dark:text-white mb-3">
+                About me
+              </h2>
+              <p className="text-sm text-gray-600 dark:text-neutral-400 leading-[1.85]">
+                Product-minded engineer with 7 years building AI-powered
+                workflows, creative tools, and scalable SaaS systems. I turn
+                LLMs and generation pipelines into shipped products.
+              </p>
+              <p className="text-sm text-gray-600 dark:text-neutral-400 leading-[1.85] mt-3">
+                Open to AI product engineering and early-stage teams. Based in
+                Singapore — EP sponsorship or senior remote.
+              </p>
+            </div>
+
+            {/* Tags */}
+            <div className="flex flex-wrap gap-1.5">
+              {[
+                "AI Product Engineering",
+                "Full-Stack SaaS",
+                "Singapore / Remote",
+              ].map((t) => (
+                <span
+                  key={t}
+                  className="text-[10px] border border-neutral-200 dark:border-neutral-700 px-2.5 py-1 rounded-full text-gray-500 dark:text-neutral-400"
+                >
+                  {t}
+                </span>
+              ))}
+            </div>
+
+            {/* Social */}
+            <div className="mt-auto pt-5 border-t border-neutral-100 dark:border-neutral-800">
+              <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-gray-400 dark:text-neutral-600 mb-3">
+                Find me at
+              </p>
+              <div className="flex gap-2.5">
+                {[
+                  {
+                    href: "https://www.linkedin.com/in/mengyao-li-software/",
+                    icon: Linkedin,
+                    label: "LinkedIn",
+                  },
+                  {
+                    href: "https://github.com/MiaMia-Li/",
+                    icon: Github,
+                    label: "GitHub",
+                  },
+                  {
+                    href: "mailto:sept.miamia@gmail.com",
+                    icon: Mail,
+                    label: "Email",
+                  },
+                ].map(({ href, icon: Icon, label }) => (
+                  <a
+                    key={label}
+                    href={href}
+                    target={label !== "Email" ? "_blank" : undefined}
+                    rel="noopener noreferrer"
+                    aria-label={label}
+                    className="p-2 rounded-full border border-neutral-200 dark:border-neutral-700 text-gray-500 dark:text-neutral-400 hover:text-black dark:hover:text-white hover:border-black dark:hover:border-white transition-all"
+                  >
+                    <Icon className="h-4 w-4" />
+                  </a>
+                ))}
+              </div>
+            </div>
+          </motion.div>
+
+          {/* Col B — Photo */}
+          <div className="relative overflow-hidden min-h-[380px] md:min-h-0">
+            <Image
+              src="/avatar.jpg"
+              alt="Mia Li"
+              fill
+              className="object-cover object-top"
+              priority
+              sizes="(max-width: 768px) 100vw, 40vw"
+            />
+            <div className="absolute bottom-3 left-3">
+              <span className="text-[9px] text-white/70 font-mono bg-black/50 backdrop-blur-sm rounded px-2 py-0.5">
+                mia.jpg
               </span>
             </div>
-            <ArrowRight className="h-4 w-4 text-neutral-400 dark:text-neutral-600 group-hover:translate-x-0.5 transition-all duration-200 flex-shrink-0" />
-          </button>
-        </motion.div>
-
-        {/* ── Projects ── */}
-        <motion.div {...fadeUp(0.26)} className="mb-10">
-          <span className="font-mono text-[11px] text-blue-600 dark:text-blue-400 block mb-3">
-            /projects
-          </span>
-          <div className="grid grid-cols-2 gap-2">
-            {PROJECTS.map((project) => (
-              <a
-                key={project.name}
-                href={project.href}
-                target="_blank"
-                rel="noopener noreferrer"
-                className="group flex items-center gap-2 px-3 py-2 rounded-lg border border-neutral-200 dark:border-neutral-700 bg-white/60 dark:bg-neutral-900/60 hover:border-neutral-300 dark:hover:border-neutral-600 hover:bg-neutral-50 dark:hover:bg-neutral-800/60 transition-all"
-              >
-                <div className="flex-1 min-w-0">
-                  <div className="flex items-center gap-1.5">
-                    <span className="text-xs font-semibold text-neutral-900 dark:text-neutral-100">
-                      {project.name}
-                    </span>
-                    {project.live && (
-                      <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 flex-shrink-0" />
-                    )}
-                  </div>
-                  <p className="text-[10px] text-neutral-500 dark:text-neutral-400 mt-0.5 leading-snug">
-                    {project.metric}
-                  </p>
-                  <p className="text-[11px] text-neutral-600 dark:text-neutral-300 mt-1 leading-relaxed line-clamp-2">
-                    {project.description}
-                  </p>
-                </div>
-                <ExternalLink className="h-3 w-3 text-neutral-300 dark:text-neutral-600 group-hover:text-neutral-500 dark:group-hover:text-neutral-400 flex-shrink-0 ml-2 transition-colors" />
-              </a>
-            ))}
           </div>
-        </motion.div>
 
-        {/* ── Experience ── */}
-        <motion.div {...fadeUp(0.32)} className="mb-10">
-          <span className="font-mono text-[11px] text-blue-600 dark:text-blue-400 block mb-3">
-            /experience
-          </span>
-          <div className="flex flex-col divide-y divide-neutral-100 dark:divide-neutral-800 border border-neutral-200 dark:border-neutral-800 rounded-xl overflow-hidden">
-            {EXPERIENCE.map((exp) => (
-              <div
-                key={exp.company}
-                className="flex items-center justify-between px-4 py-3.5 bg-white/60 dark:bg-neutral-900/60"
-              >
-                <div className="min-w-0">
-                  <div className="flex items-center gap-2">
-                    <span className="text-sm font-semibold text-neutral-800 dark:text-neutral-100">
-                      {exp.company}
-                    </span>
-                    <span className="text-xs text-neutral-500 dark:text-neutral-400 hidden sm:inline">
-                      · {exp.role}
-                    </span>
-                  </div>
-                  <p className="text-[11px] text-neutral-600 dark:text-neutral-400 mt-0.5">
-                    {exp.metric}
-                  </p>
-                </div>
-                <span className="text-[11px] text-neutral-500 dark:text-neutral-400 hidden sm:inline flex-shrink-0 ml-3">
-                  {exp.period}
-                </span>
-              </div>
-            ))}
-          </div>
-        </motion.div>
-
-        {/* ── Links ── */}
-        <motion.div {...fadeUp(0.38)} className="mb-8">
-          <span className="font-mono text-[11px] text-blue-600 dark:text-blue-400 block mb-2">
-            /links
-          </span>
-          <a
-            href="/resume.pdf"
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-flex items-center gap-1.5 px-4 py-2 text-xs border border-neutral-200 dark:border-neutral-700 rounded-lg text-neutral-700 dark:text-neutral-300 hover:border-neutral-300 dark:hover:border-neutral-600 hover:text-neutral-900 dark:hover:text-neutral-100 transition-colors"
+          {/* Col C — Experience + Skills */}
+          <motion.div
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            transition={{ delay: 0.15 }}
+            className="flex flex-col gap-6 p-7"
           >
-            <Download className="h-3.5 w-3.5" />
-            Resume
-          </a>
-        </motion.div>
+            <div>
+              <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-gray-400 dark:text-neutral-600 mb-4">
+                Experience
+              </p>
+              <div className="space-y-4">
+                {EXPERIENCE.map((exp) => (
+                  <div key={exp.company}>
+                    <p className="font-black text-sm text-black dark:text-white">
+                      {exp.company}
+                    </p>
+                    <p className="text-xs text-gray-500 dark:text-neutral-400 mt-0.5">
+                      {exp.role}
+                    </p>
+                    <p className="text-[10px] text-gray-400 dark:text-neutral-500 mt-0.5">
+                      {exp.period}
+                    </p>
+                    <p
+                      className="text-[11px] text-gray-500 dark:text-neutral-400 mt-1.5 pl-2 border-l-2 leading-snug"
+                      style={{ borderColor: green }}
+                    >
+                      {exp.note}
+                    </p>
+                  </div>
+                ))}
+              </div>
+            </div>
 
+            <div className="border-t border-neutral-100 dark:border-neutral-800 pt-5 mt-auto">
+              <p className="text-[10px] font-bold uppercase tracking-[0.18em] text-gray-400 dark:text-neutral-600 mb-3">
+                Tech
+              </p>
+              <div className="flex flex-wrap gap-1.5">
+                {SKILLS.map((s) => (
+                  <span
+                    key={s}
+                    className="text-[10px] bg-neutral-50 dark:bg-neutral-900 border border-neutral-200 dark:border-neutral-700 px-2 py-0.5 rounded text-gray-600 dark:text-neutral-400"
+                  >
+                    {s}
+                  </span>
+                ))}
+              </div>
+            </div>
+          </motion.div>
+        </div>
+
+        {/* Row 3 — Work label */}
+        <div className="flex items-center gap-3 px-10 md:px-14 py-4 border-b border-neutral-200 dark:border-neutral-800">
+          <span
+            className="h-2 w-2 rounded-full flex-shrink-0"
+            style={{ background: green }}
+          />
+          <span className="text-[11px] font-black uppercase tracking-[0.22em] text-black dark:text-white">
+            Work
+          </span>
+        </div>
+
+        {/* Row 4 — Projects */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 border-b border-neutral-200 dark:border-neutral-800">
+          {PROJECTS.map((p, i) => (
+            <motion.a
+              key={p.name}
+              href={p.href}
+              target="_blank"
+              rel="noopener noreferrer"
+              initial={{ opacity: 0, y: 6 }}
+              whileInView={{ opacity: 1, y: 0 }}
+              viewport={{ once: true }}
+              transition={{ duration: 0.3, delay: i * 0.07 }}
+              className={`group flex flex-col gap-2 p-7 hover:bg-neutral-50 dark:hover:bg-neutral-900 transition-colors
+                ${i < 3 ? "border-r border-neutral-200 dark:border-neutral-800" : ""}
+                ${i < 2 ? "sm:border-b border-neutral-200 dark:border-neutral-800 lg:border-b-0" : ""}
+              `}
+            >
+              <div className="flex items-center justify-between">
+                <span className="text-[10px] font-semibold text-gray-400 dark:text-neutral-500">
+                  {p.tag}
+                </span>
+                <ArrowUpRight className="h-3.5 w-3.5 text-gray-200 dark:text-neutral-700 group-hover:text-gray-500 dark:group-hover:text-neutral-400 transition-colors" />
+              </div>
+              <p className="font-black text-base text-black dark:text-white leading-tight">
+                {p.name}
+              </p>
+              <p className="text-xs font-semibold text-gray-500 dark:text-neutral-400">
+                {p.metric}
+              </p>
+              <p className="text-[11px] text-gray-400 dark:text-neutral-500 leading-relaxed">
+                {p.desc}
+              </p>
+            </motion.a>
+          ))}
+        </div>
+
+        {/* Row 5 — Closing note */}
+        <div className="grid grid-cols-1 md:grid-cols-[minmax(0,1fr)_190px]">
+          <div className="flex min-h-[132px] items-end p-8 md:p-10">
+            <p className="max-w-2xl text-base leading-[1.25] text-black dark:text-white md:text-lg">
+              Have an interesting, stupid or crazy idea you&apos;d like some
+              help building?{" "}
+              <a
+                href="mailto:sept.miamia@gmail.com"
+                className="underline underline-offset-2 decoration-green-600 decoration-2"
+              >
+                Let&apos;s talk.
+              </a>
+            </p>
+          </div>
+          <div className="flex items-end border-t border-neutral-200 p-8 text-xs font-medium text-neutral-400 dark:border-neutral-800 dark:text-neutral-500 md:border-l md:border-t-0 md:p-10">
+            2026 © Mia Li
+          </div>
+        </div>
       </div>
-    </section>
+
+      {/* ── Persistent floating Chat button ───────────────────── */}
+      <motion.button
+        initial={{ opacity: 0, y: 16 }}
+        animate={{ opacity: 1, y: 0 }}
+        transition={{ delay: 0.8, duration: 0.35 }}
+        onClick={onOpenChat}
+        className="fixed bottom-24 right-4 z-20 flex items-center gap-3 rounded-2xl border border-neutral-200 bg-white/95 px-3 py-3 pr-4 text-left shadow-[0_18px_45px_rgba(0,0,0,0.16)] backdrop-blur-md transition-colors hover:border-neutral-300 hover:bg-white dark:border-neutral-700 dark:bg-neutral-900/95 dark:hover:border-neutral-600 sm:bottom-6 sm:right-6"
+        whileHover={{ y: -2 }}
+        whileTap={{ scale: 0.98 }}
+      >
+        <span className="relative h-11 w-11 flex-shrink-0 overflow-hidden rounded-full ring-2 ring-emerald-100 dark:ring-emerald-900/50">
+          <Image
+            src="/avatar.jpg"
+            alt="Mia AI"
+            fill
+            className="object-cover"
+            sizes="44px"
+          />
+          <span className="absolute bottom-0 right-0 h-3 w-3 rounded-full border-2 border-white bg-emerald-500 dark:border-neutral-900" />
+        </span>
+        <span className="min-w-0">
+          <span className="mb-0.5 flex items-center gap-1.5 text-[10px] font-black uppercase tracking-[0.16em] text-emerald-600 dark:text-emerald-400">
+            <Sparkles className="h-3 w-3" />
+            Digital twin
+          </span>
+          <span className="block whitespace-nowrap text-sm font-black leading-tight text-black dark:text-white">
+            Chat with Mia AI
+          </span>
+          <span className="block whitespace-nowrap text-[11px] text-neutral-500 dark:text-neutral-400">
+            Ask about projects & fit
+          </span>
+        </span>
+        <span className="ml-1 flex h-8 w-8 flex-shrink-0 items-center justify-center rounded-full bg-black text-white dark:bg-white dark:text-black">
+          <MessageCircle className="h-4 w-4" />
+        </span>
+      </motion.button>
+    </div>
   );
 }
